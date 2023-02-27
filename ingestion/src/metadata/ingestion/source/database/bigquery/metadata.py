@@ -52,7 +52,7 @@ from metadata.generated.schema.security.credentials.gcsCredentials import (
 from metadata.generated.schema.type.tagLabel import TagLabel
 from metadata.ingestion.api.source import InvalidSourceException
 from metadata.ingestion.models.ometa_classification import OMetaTagAndClassification
-from metadata.ingestion.source.connections import get_connection
+from metadata.ingestion.source.connections import get_connection, get_test_connection_fn
 from metadata.ingestion.source.database.column_type_parser import create_sqlalchemy_type
 from metadata.ingestion.source.database.common_db_source import CommonDbSourceService
 from metadata.utils import fqn
@@ -338,3 +338,11 @@ class BigquerySource(CommonDbSourceService):
         if self.temp_credentials:
             os.unlink(self.temp_credentials)
         os.environ.pop("GOOGLE_CLOUD_PROJECT", "")
+
+    def test_connection(self) -> str:
+        """
+        Used a timed-bound function to test that the engine
+        can properly reach the source
+        """
+        test_connection_fn = get_test_connection_fn(self.service_connection)
+        test_connection_fn(self.engine, self.service_connection)
