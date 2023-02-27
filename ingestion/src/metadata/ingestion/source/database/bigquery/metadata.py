@@ -339,7 +339,7 @@ class BigquerySource(CommonDbSourceService):
             os.unlink(self.temp_credentials)
         os.environ.pop("GOOGLE_CLOUD_PROJECT", "")
 
-    def test_connection(self) -> str:
+    def test_connection(self) -> None:
         """
         Used a timed-bound function to test that the engine
         can properly reach the source
